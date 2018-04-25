@@ -187,9 +187,9 @@ func (app *BaseApp) initFromStore(mainKey sdk.StoreKey) error {
 // NewContext returns a new Context with the correct store, the given header, and nil txBytes.
 func (app *BaseApp) NewContext(isCheckTx bool, header abci.Header) sdk.Context {
 	if isCheckTx {
-		return sdk.NewContext(app.checkState.ms, header, true, nil, log.NewNopLogger())
+		return sdk.NewContext(app.checkState.ms, header, true, nil, app.Logger)
 	}
-	return sdk.NewContext(app.deliverState.ms, header, false, nil, log.NewNopLogger())
+	return sdk.NewContext(app.deliverState.ms, header, false, nil, app.Logger)
 }
 
 type state struct {
@@ -205,7 +205,7 @@ func (app *BaseApp) setCheckState(header abci.Header) {
 	ms := app.cms.CacheMultiStore()
 	app.checkState = &state{
 		ms:  ms,
-		ctx: sdk.NewContext(ms, header, true, nil, log.NewNopLogger()),
+		ctx: sdk.NewContext(ms, header, true, nil, app.Logger),
 	}
 }
 
@@ -213,7 +213,7 @@ func (app *BaseApp) setDeliverState(header abci.Header) {
 	ms := app.cms.CacheMultiStore()
 	app.deliverState = &state{
 		ms:  ms,
-		ctx: sdk.NewContext(ms, header, false, nil, log.NewNopLogger()),
+		ctx: sdk.NewContext(ms, header, false, nil, app.Logger),
 	}
 }
 
